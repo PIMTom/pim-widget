@@ -147,14 +147,15 @@
       .${uid}-close svg { display: block; }
 
       /* ── Left panel ── */
-      .${uid}-modal-left {
-        width: 370px;
-        min-width: 370px;
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-        position: relative;
-      }
+.${uid}-modal-left {
+  width: 370px;
+  min-width: 370px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
       .${uid}-left-body {
         background: ${color};
         flex: 1;
