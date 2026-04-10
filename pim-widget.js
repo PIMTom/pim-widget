@@ -232,7 +232,8 @@
         z-index: 2;
       }
       .${uid}-total-bar {
-        background: ${dark};
+        background: var(--Purple-70, #604291);
+        box-shadow: 0 2px 22px 0 rgba(0, 0, 0, 0.05);
         padding: 20px 28px;
         display: flex;
         align-items: center;
