@@ -1,62 +1,74 @@
 (function () {
-  'use strict';
+  "use strict";
 
   // 1. Try to find the script tag by its source name
   // 2. If that fails, just use the first script tag it finds as a backup
-  const script = document.querySelector('script[src*="pim-widget"]') || document.currentScript;
+  const script =
+    document.querySelector('script[src*="pim-widget"]') ||
+    document.currentScript;
 
   const config = {
-    price:          parseFloat(script?.dataset?.pimPrice || 2985),
+    price: parseFloat(script?.dataset?.pimPrice || 2985),
     maxInstalments: parseInt(script?.dataset?.pimMaxInstalments || 24),
-    color:          script?.dataset?.pimColor || '#875fc8',
-    minPrice:       parseFloat(script?.dataset?.pimMinPrice || 500),
-    maxPrice:       parseFloat(script?.dataset?.pimMaxPrice || 5000),
+    color: script?.dataset?.pimColor || "#875fc8",
+    minPrice: parseFloat(script?.dataset?.pimMinPrice || 500),
+    maxPrice: parseFloat(script?.dataset?.pimMaxPrice || 5000),
   };
 
   console.log("Widget Config Loaded:", config); // This will show in your Edge Console (F12)
   /* ── Helpers ── */
-  const fmt = n => '£' + Number(n).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmt = (n) =>
+    "£" +
+    Number(n).toLocaleString("en-GB", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
   function shade(hex, pct) {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const r = Math.min(255, Math.max(0, (num >> 16)        + (pct * 2.55 | 0)));
-    const g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + (pct * 2.55 | 0)));
-    const b = Math.min(255, Math.max(0, (num & 0xff)        + (pct * 2.55 | 0)));
-    return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+    const num = parseInt(hex.replace("#", ""), 16);
+    const r = Math.min(255, Math.max(0, (num >> 16) + ((pct * 2.55) | 0)));
+    const g = Math.min(
+      255,
+      Math.max(0, ((num >> 8) & 0xff) + ((pct * 2.55) | 0)),
+    );
+    const b = Math.min(255, Math.max(0, (num & 0xff) + ((pct * 2.55) | 0)));
+    return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
   }
 
   /* ── Unique ID so multiple instances don't clash ── */
-  const uid = 'pim_' + Math.random().toString(36).slice(2, 8);
+  const uid = "pim_" + Math.random().toString(36).slice(2, 8);
 
   /* ── Compute payment plan ── */
   function compute(price, depositPct, instalments) {
-    const deposit       = price * (depositPct / 100);
-    const remaining     = price - deposit;
+    const deposit = price * (depositPct / 100);
+    const remaining = price - deposit;
     const remInstalments = instalments - 1;
-    const monthly       = remInstalments > 0 ? remaining / remInstalments : remaining;
+    const monthly = remInstalments > 0 ? remaining / remInstalments : remaining;
     return { deposit, monthly, remInstalments };
   }
 
   /* ── Inject CSS (once per page) ── */
   function injectStyles(color) {
-    const id = 'pim-styles-' + uid;
+    const id = "pim-styles-" + uid;
     if (document.getElementById(id)) return;
 
     const dark = shade(color, -20);
 
     // Load Nunito Sans (variable) + General Sans Variable (once per page)
-    if (!document.getElementById('pim-nunito-font')) {
-      const link = document.createElement('link');
-      link.id = 'pim-nunito-font';
-      link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght,YTLC@0,6..12,75..125,200..1000,440..660&display=swap';
+    if (!document.getElementById("pim-nunito-font")) {
+      const link = document.createElement("link");
+      link.id = "pim-nunito-font";
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap";
       document.head.appendChild(link);
     }
-    if (!document.getElementById('pim-general-sans-font')) {
-      const link = document.createElement('link');
-      link.id = 'pim-general-sans-font';
-      link.rel = 'stylesheet';
-      link.href = 'https://api.fontshare.com/v2/css?f[]=general-sans@1,2,3,4,5,6,7&display=swap';
+    if (!document.getElementById("pim-general-sans-font")) {
+      const link = document.createElement("link");
+      link.id = "pim-general-sans-font";
+      link.rel = "stylesheet";
+      link.href =
+        "https://api.fontshare.com/v2/css?f[]=general-sans@1,2,3,4,5,6,7&display=swap";
       document.head.appendChild(link);
     }
 
@@ -351,27 +363,28 @@
     `;
 
     // legacy — kept so nothing below references missing vars
-    const darker = shade(color, -40); void darker;
-    const light  = shade(color,  88); void light;
+    const darker = shade(color, -40);
+    void darker;
+    const light = shade(color, 88);
+    void light;
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.id = id;
     style.textContent = css;
     document.head.appendChild(style);
   }
-
 
   /* ── Build DOM ── */
   function buildWidget() {
     injectStyles(config.color);
 
     /* ─ Banner ─ */
-    const banner = document.createElement('div');
+    const banner = document.createElement("div");
     banner.className = `${uid}-banner`;
-    banner.setAttribute('role', 'button');
-    banner.setAttribute('tabindex', '0');
-    banner.setAttribute('aria-haspopup', 'dialog');
-    banner.setAttribute('aria-label', 'View interest free finance options');
+    banner.setAttribute("role", "button");
+    banner.setAttribute("tabindex", "0");
+    banner.setAttribute("aria-haspopup", "dialog");
+    banner.setAttribute("aria-label", "View interest free finance options");
     banner.innerHTML = `
       <div class="${uid}-banner-left">
         <div class="sub">Interest Free Finance from</div>
@@ -382,11 +395,11 @@
     `;
 
     /* ─ Overlay + Modal ─ */
-    const overlay = document.createElement('div');
+    const overlay = document.createElement("div");
     overlay.className = `${uid}-overlay`;
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-label', 'Payment plan details');
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "Payment plan details");
     overlay.innerHTML = `
       <div class="${uid}-modal">
 
@@ -409,7 +422,7 @@
             <div class="${uid}-left-text">
               <p class="tagline">Spread the cost of your purchase</p>
               <p class="heading">0% Interest</p>
-              <p class="subtext">Orders between £${Math.round(config.minPrice).toLocaleString('en-GB')} and £${Math.round(config.maxPrice).toLocaleString('en-GB')}</p>
+              <p class="subtext">Orders between £${Math.round(config.minPrice).toLocaleString("en-GB")} and £${Math.round(config.maxPrice).toLocaleString("en-GB")}</p>
             </div>
             <img class="${uid}-left-plant" src="images/plant.png" alt="" />
             <!-- Character sits at bottom of purple panel, clipped by overflow:hidden -->
@@ -463,17 +476,30 @@
     document.body.appendChild(overlay);
 
     /* ─ Wire up events ─ */
-    const open  = () => { overlay.classList.add('open'); updateModal(); };
-    const close = () => overlay.classList.remove('open');
+    const open = () => {
+      overlay.classList.add("open");
+      updateModal();
+    };
+    const close = () => overlay.classList.remove("open");
 
-    banner.addEventListener('click', open);
-    banner.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') open(); });
-    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-    overlay.querySelector(`.${uid}-close`).addEventListener('click', close);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    banner.addEventListener("click", open);
+    banner.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") open();
+    });
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) close();
+    });
+    overlay.querySelector(`.${uid}-close`).addEventListener("click", close);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
 
-    overlay.querySelector(`#${uid}-dep-slider`).addEventListener('input', updateModal);
-    overlay.querySelector(`#${uid}-inst-slider`).addEventListener('input', updateModal);
+    overlay
+      .querySelector(`#${uid}-dep-slider`)
+      .addEventListener("input", updateModal);
+    overlay
+      .querySelector(`#${uid}-inst-slider`)
+      .addEventListener("input", updateModal);
 
     /* ─ Initial render ─ */
     updateBanner();
@@ -487,10 +513,14 @@
     const el = document.getElementById(`${uid}-b-amt`);
     if (!el) return;
     const instSlider = document.getElementById(`${uid}-inst-slider`);
-    const depSlider  = document.getElementById(`${uid}-dep-slider`);
+    const depSlider = document.getElementById(`${uid}-dep-slider`);
     if (!instSlider || !depSlider) return;
-    const { monthly } = compute(config.price, parseFloat(depSlider.value), parseInt(instSlider.value));
-    el.textContent = fmt(monthly) + ' per month';
+    const { monthly } = compute(
+      config.price,
+      parseFloat(depSlider.value),
+      parseInt(instSlider.value),
+    );
+    el.textContent = fmt(monthly) + " per month";
   }
 
   /* ── Slider two-tone fill ── */
@@ -499,24 +529,28 @@
     const max = parseFloat(slider.max);
     const val = parseFloat(slider.value);
     const pct = ((val - min) / (max - min)) * 100;
-    slider.style.background =
-      `linear-gradient(to right, ${config.color} ${pct}%, #f0f3fc ${pct}%)`;
+    slider.style.background = `linear-gradient(to right, ${config.color} ${pct}%, #f0f3fc ${pct}%)`;
   }
 
   /* ── Update modal stats ── */
   function updateModal() {
     const instSlider = document.getElementById(`${uid}-inst-slider`);
-    const depSlider  = document.getElementById(`${uid}-dep-slider`);
+    const depSlider = document.getElementById(`${uid}-dep-slider`);
     if (!instSlider || !depSlider) return;
 
     const instalments = parseInt(instSlider.value);
-    const depPct      = parseFloat(depSlider.value);
-    const { deposit, monthly, remInstalments } = compute(config.price, depPct, instalments);
+    const depPct = parseFloat(depSlider.value);
+    const { deposit, monthly, remInstalments } = compute(
+      config.price,
+      depPct,
+      instalments,
+    );
 
-    document.getElementById(`${uid}-m-total`).textContent   = fmt(config.price);
-    document.getElementById(`${uid}-m-inst`).textContent    = instalments;
-    document.getElementById(`${uid}-m-dep`).textContent     = fmt(deposit);
-    document.getElementById(`${uid}-m-monthly`).textContent = fmt(monthly) + ' × ' + remInstalments;
+    document.getElementById(`${uid}-m-total`).textContent = fmt(config.price);
+    document.getElementById(`${uid}-m-inst`).textContent = instalments;
+    document.getElementById(`${uid}-m-dep`).textContent = fmt(deposit);
+    document.getElementById(`${uid}-m-monthly`).textContent =
+      fmt(monthly) + " × " + remInstalments;
 
     updateSliderFill(depSlider);
     updateSliderFill(instSlider);
@@ -525,10 +559,10 @@
 
   /* ── Find placeholder(s) or auto-append ── */
   function mount() {
-    const placeholders = document.querySelectorAll('[data-acpim-widget]');
+    const placeholders = document.querySelectorAll("[data-acpim-widget]");
 
     if (placeholders.length > 0) {
-      placeholders.forEach(el => {
+      placeholders.forEach((el) => {
         const widget = buildWidget();
         el.replaceWith(widget);
       });
@@ -540,10 +574,9 @@
   }
 
   /* ── Init ── */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mount);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mount);
   } else {
     mount();
   }
-
 })();
