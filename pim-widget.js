@@ -44,12 +44,19 @@
 
     const dark = shade(color, -20);
 
-    // Load Nunito Sans from Google Fonts (once per page)
+    // Load Nunito Sans (variable) + General Sans Variable (once per page)
     if (!document.getElementById('pim-nunito-font')) {
       const link = document.createElement('link');
       link.id = 'pim-nunito-font';
       link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap';
+      link.href = 'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght,YTLC@0,6..12,75..125,200..1000,440..660&display=swap';
+      document.head.appendChild(link);
+    }
+    if (!document.getElementById('pim-general-sans-font')) {
+      const link = document.createElement('link');
+      link.id = 'pim-general-sans-font';
+      link.rel = 'stylesheet';
+      link.href = 'https://api.fontshare.com/v2/css?f[]=general-sans@1,2,3,4,5,6,7&display=swap';
       document.head.appendChild(link);
     }
 
@@ -177,18 +184,24 @@
         width: 100%;
         position: relative;
         z-index: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       .${uid}-left-text .tagline {
         font-size: 16px; font-weight: 600; line-height: 22px;
         letter-spacing: 0.2px; margin: 0 0 6px;
+        font-variation-settings: 'YTLC' 500, 'wdth' 100;
       }
       .${uid}-left-text .heading {
-        font-size: 22px; font-weight: 600; line-height: 30px;
+        font-family: 'General Sans Variable', 'General Sans', sans-serif;
+        font-size: 22px; font-weight: 560; line-height: 30px;
         letter-spacing: 0.2px; margin: 0 0 3px;
+        font-variation-settings: 'wght' 560;
       }
       .${uid}-left-text .subtext {
         font-size: 14px; font-weight: 400; line-height: 20px;
         letter-spacing: 0.2px; opacity: 0.7; margin: 0;
+        font-variation-settings: 'YTLC' 500, 'wdth' 100;
       }
       .${uid}-left-plant {
         position: absolute;
@@ -215,12 +228,16 @@
         color: #fff;
         position: relative;
         z-index: 3;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       .${uid}-total-bar .label {
         font-size: 16px; font-weight: 500; line-height: 22px;
+        font-variation-settings: 'YTLC' 500, 'wdth' 100;
       }
       .${uid}-total-bar .amount {
         font-size: 18px; font-weight: 700; line-height: 24px; letter-spacing: 0.2px;
+        font-variation-settings: 'YTLC' 500, 'wdth' 100;
       }
 
       /* ── Right panel ── */
