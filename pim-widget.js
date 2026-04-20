@@ -72,9 +72,10 @@
     const css = `
       /* ── Banner ── */
       .${uid}-banner {
-        background: ${color};
-        border-radius: 10px;
-        padding: 14px 18px;
+        background: #f0ecfd;
+        border: 1px solid #c4b2f7;
+        border-radius: 12px;
+        padding: 12px 12px 12px 18px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -82,18 +83,63 @@
         cursor: pointer;
         font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         user-select: none;
+        box-shadow: 0px 30px 50px -40px rgba(0,0,0,0.03), 0px 50px 90px -30px rgba(0,0,0,0.1);
+        max-width: 632px;
       }
-      .${uid}-banner-left .sub  { font-size: 11px; color: rgba(255,255,255,.75); }
-      .${uid}-banner-left .amt  { font-size: 17px; font-weight: 700; color: #fff; margin: 2px 0; }
-      .${uid}-banner-left .link { font-size: 11px; color: rgba(255,255,255,.85); text-decoration: underline; }
-      .${uid}-badge {
-        background: rgba(255,255,255,.18);
-        border-radius: 7px;
-        padding: 5px 10px;
-        font-size: 11px;
-        color: #fff;
-        white-space: nowrap;
+      .${uid}-banner-left-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
         flex-shrink: 0;
+      }
+      .${uid}-banner-icon {
+        width: 52px;
+        height: 52px;
+        flex-shrink: 0;
+        position: relative;
+        overflow: visible;
+      }
+      .${uid}-banner-icon img {
+        display: block;
+        position: absolute;
+        top: -10%;
+        left: -15%;
+        right: -15%;
+        bottom: -20%;
+        width: 130%;
+        height: 130%;
+        object-fit: contain;
+      }
+      .${uid}-banner-left {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        letter-spacing: 0.2px;
+      }
+      .${uid}-banner-text-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .${uid}-banner-left .sub  { font-size: 14px; font-weight: 400; color: #506978; line-height: 20px; }
+      .${uid}-banner-left .amt  { font-size: 16px; font-weight: 700; color: #101111; line-height: 22px; }
+      .${uid}-banner-left .link { font-size: 12px; font-weight: 700; color: #875fc8; text-decoration: underline; line-height: normal; }
+      .${uid}-badge {
+        background: #875fc8;
+        border-radius: 10px;
+        padding: 22px 20px;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .${uid}-badge img {
+        display: block;
+        width: 140px;
+        height: 26px;
+        object-fit: contain;
       }
 
       /* ── Overlay ── */
@@ -115,7 +161,7 @@
         border-radius: 20px;
         overflow: hidden;
         width: 100%;
-        max-width: 720px;
+        max-width: 760px;
         display: flex;
         flex-direction: row;
         font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -304,8 +350,8 @@
       }
       .${uid}-info-box svg { flex-shrink: 0; margin-top: 1px; }
       .${uid}-legal {
-        font-size: 14px;
-        line-height: 14px;
+        font-size: 12px;
+        line-height: 20px;
         color: #617481;
         font-weight: 400;
         letter-spacing: 0.1px;
@@ -318,9 +364,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
         flex-shrink: 0;
-        -webkit-font-smoothing: antialiased;
+      }
+      .${uid}-trustpilot-bar img {
+        height: 28px;
+        width: auto;
+        display: block;
       }
       .${uid}-stat-rows {
         display: flex;
@@ -394,12 +443,21 @@
     const _initInst = Math.min(12, config.maxInstalments);
     const _initMonthly = compute(config.price, _initInst).monthly;
     banner.innerHTML = `
-      <div class="${uid}-banner-left">
-        <div class="sub">Interest Free Finance from</div>
-        <div class="amt" id="${uid}-b-amt">${fmt(_initMonthly)} per month</div>
-        <div class="link">Find out more</div>
+      <div class="${uid}-banner-left-group">
+        <div class="${uid}-banner-icon">
+          <img src="images/Group 2131328595.png" alt="" />
+        </div>
+        <div class="${uid}-banner-left">
+          <div class="${uid}-banner-text-group">
+            <div class="sub">Buy Now. Pay Monthly</div>
+            <div class="amt" id="${uid}-b-amt">${_initInst} x ${fmt(_initMonthly)}</div>
+          </div>
+          <div class="link">Find out more</div>
+        </div>
       </div>
-      <div class="${uid}-badge">payitmonthly</div>
+      <div class="${uid}-badge">
+        <img src="https://www.figma.com/api/mcp/asset/1eb3c549-ded3-4b70-9a36-53c255f9bc81" alt="payitmonthly" />
+      </div>
     `;
 
     /* ─ Overlay + Modal ─ */
@@ -442,11 +500,7 @@
             <img class="${uid}-left-character" src="images/character.png" alt="" />
           </div>
           <div class="${uid}-trustpilot-bar">
-            <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="22" height="22" rx="3" fill="#00B67A"/><path d="M11 3.5L12.84 9.11H18.76L13.96 12.55L15.8 18.16L11 14.72L6.2 18.16L8.04 12.55L3.24 9.11H9.16L11 3.5Z" fill="white"/></svg>
-            <span style="color:#fff;font-size:13px;font-weight:700;font-family:'Nunito Sans',sans-serif;">Trustpilot</span>
-            <div style="display:flex;gap:2px;">
-              ${[...Array(5)].map(() => `<svg width="17" height="17" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="2" fill="#00B67A"/><path d="M10 2.5L11.84 8.11H17.76L12.96 11.55L14.8 17.16L10 13.72L5.2 17.16L7.04 11.55L2.24 8.11H8.16L10 2.5Z" fill="white"/></svg>`).join('')}
-            </div>
+            <img src="images/trustpilot.png" alt="Trustpilot 5 stars" />
           </div>
         </div>
 
@@ -526,8 +580,9 @@
     if (!el) return;
     const instSlider = document.getElementById(`${uid}-inst-slider`);
     if (!instSlider) return;
-    const { monthly } = compute(config.price, parseInt(instSlider.value));
-    el.textContent = fmt(monthly) + " per month";
+    const inst = parseInt(instSlider.value);
+    const { monthly } = compute(config.price, inst);
+    el.textContent = inst + " x " + fmt(monthly);
   }
 
   /* ── Slider two-tone fill ── */
