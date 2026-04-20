@@ -405,10 +405,17 @@
 
       /* ── Mobile: stack panels ── */
       @media (max-width: 600px) {
-        .${uid}-modal { flex-direction: column; max-width: 420px; }
+        .${uid}-modal {
+          flex-direction: column;
+          max-width: 420px;
+          max-height: 90dvh;
+          overflow-y: auto;
+        }
         .${uid}-modal-left { width: 100%; min-width: unset; }
-        .${uid}-left-body { min-height: 200px; }
-        .${uid}-left-character { width: 200px; height: 200px; }
+        .${uid}-left-body { min-height: 120px; padding-bottom: 16px; }
+        .${uid}-left-character { display: none; }
+        .${uid}-left-plant { display: none; }
+        .${uid}-logo-badge { display: none; }
       }
     `;
 
