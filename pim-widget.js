@@ -39,12 +39,9 @@
   const uid = "pim_" + Math.random().toString(36).slice(2, 8);
 
   /* ── Compute payment plan ── */
-  function compute(price, depositPct, instalments) {
-    const deposit = price * (depositPct / 100);
-    const remaining = price - deposit;
-    const remInstalments = instalments - 1;
-    const monthly = remInstalments > 0 ? remaining / remInstalments : remaining;
-    return { deposit, monthly, remInstalments };
+  function compute(price, instalments) {
+    const monthly = instalments > 0 ? price / instalments : price;
+    return { monthly, instalments };
   }
 
   /* ── Inject CSS (once per page) ── */
@@ -118,7 +115,7 @@
         border-radius: 20px;
         overflow: hidden;
         width: 100%;
-        max-width: 740px;
+        max-width: 720px;
         display: flex;
         flex-direction: row;
         font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -129,13 +126,12 @@
       /* ── Close button ── */
       .${uid}-close {
         position: absolute;
-        top: 16px;
-        right: 16px;
-        width: 28px;
-        height: 28px;
-        background: rgba(255,255,255,.18);
+        top: 12px;
+        right: 12px;
+        width: 26px;
+        height: 26px;
+        background: none;
         border: none;
-        border-radius: 50%;
         cursor: pointer;
         padding: 0;
         z-index: 10;
@@ -143,13 +139,13 @@
         align-items: center;
         justify-content: center;
       }
-      .${uid}-close:hover { background: rgba(255,255,255,.32); }
+      .${uid}-close:hover { opacity: 0.7; }
       .${uid}-close svg { display: block; }
 
       /* ── Left panel ── */
 .${uid}-modal-left {
-  width: 370px;
-  min-width: 370px;
+  width: 330px;
+  min-width: 330px;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -159,10 +155,10 @@
       .${uid}-left-body {
         background: ${color};
         flex: 1;
-        padding: 36px 28px 0;
+        padding: 24px 22px 0 28px;
         position: relative;
         overflow: hidden;
-        min-height: 300px;
+        min-height: 350px;
       }
       /* Decorative swirl backgrounds */
       .${uid}-left-swirl-1 {
@@ -183,99 +179,77 @@
         display: block; width: 100%; height: 100%; object-fit: fill;
       }
       .${uid}-left-logo {
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         position: relative;
         z-index: 1;
         width: 164px;
         height: 31px;
-        overflow: hidden;
         flex-shrink: 0;
       }
       .${uid}-left-logo img { width: 100%; height: 100%; display: block; object-fit: contain; object-position: left center; }
-      .${uid}-left-text {
-        color: #fff;
-        width: 100%;
+      .${uid}-left-badges {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         position: relative;
         z-index: 1;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
       }
-      .${uid}-left-text .tagline {
-        font-size: 16px; font-weight: 600; line-height: 22px;
-        letter-spacing: 0.2px; margin: 0 0 6px;
-        font-variation-settings: 'YTLC' 500, 'wdth' 100;
+      .${uid}-left-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.2px;
       }
-      .${uid}-left-text .heading {
-        font-family: 'General Sans Variable', 'General Sans', sans-serif;
-        font-size: 22px; font-weight: 560; line-height: 30px;
-        letter-spacing: 0.2px; margin: 0 0 3px;
-        font-variation-settings: 'wght' 560;
+      .${uid}-badge-icon {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        display: block;
+        margin: -3px;
       }
-      .${uid}-left-text .subtext {
-        font-size: 14px; font-weight: 400; line-height: 20px;
-        letter-spacing: 0.2px; opacity: 0.7; margin: 0;
-        font-variation-settings: 'YTLC' 500, 'wdth' 100;
-      }
+      .${uid}-badge-icon svg { display: block; }
       .${uid}-left-plant {
         position: absolute;
-        width: 172px; height: 258px;
-        left: 32px; bottom: -110px;
+        width: 150px; height: 225px;
+        left: 14px; bottom: -45px;
         object-fit: contain; pointer-events: none;
         z-index: 1;
       }
       .${uid}-left-character {
         position: absolute;
-        width: 237px; height: 237px;
-        left: calc(50% + 20px);
-        bottom: -18px;
+        width: 230px; height: 230px;
+        left: calc(50% + 22px);
+        bottom: -6px;
         transform: translateX(-50%);
         object-fit: contain; pointer-events: none;
         z-index: 2;
       }
-      .${uid}-total-bar {
-        background: var(--Purple-70, #604291);
-        box-shadow: 0 2px 22px 0 rgba(0, 0, 0, 0.05);
-        padding: 20px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: #fff;
-        position: relative;
-        z-index: 3;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      .${uid}-total-bar .label {
-        font-size: 16px; font-weight: 500; line-height: 22px;
-        font-variation-settings: 'YTLC' 500, 'wdth' 100;
-      }
-      .${uid}-total-bar .amount {
-        font-size: 18px; font-weight: 700; line-height: 24px; letter-spacing: 0.2px;
-        font-variation-settings: 'YTLC' 500, 'wdth' 100;
-      }
-
       /* ── Right panel ── */
       .${uid}-modal-right {
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0;
         min-width: 0;
         background: #fff;
       }
       .${uid}-right-sliders {
-        padding: 36px 26px 0;
+        padding: 22px 22px 0;
       }
       .${uid}-right-sliders h3 {
-        font-size: 18px; font-weight: 700; line-height: 24px;
-        letter-spacing: 0.2px; color: #101111; margin: 0 0 20px;
+        font-size: 16px; font-weight: 700; line-height: 22px;
+        letter-spacing: 0.2px; color: #101111; margin: 0 0 14px;
       }
-      .${uid}-slider-block { margin-bottom: 14px; }
+      .${uid}-slider-block { margin-bottom: 10px; }
       .${uid}-slider-block:last-child { margin-bottom: 0; }
       .${uid}-slider-block label {
         display: block;
         font-size: 16px; font-weight: 600; line-height: 22px;
-        letter-spacing: 0.2px; color: #506978; margin-bottom: 6px;
+        letter-spacing: 0.2px; color: #506978; margin-bottom: 2px;
       }
       .${uid}-slider-block input[type=range] {
         -webkit-appearance: none; appearance: none;
@@ -300,29 +274,58 @@
       }
 
       /* ── Divider ── */
-      .${uid}-divider {
-        height: 32px;
-        width: 100%;
-        flex-shrink: 0;
-      }
-      .${uid}-divider img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: fill;
-      }
+      .${uid}-divider { display: none; }
 
       /* ── Stats section ── */
       .${uid}-right-stats {
-        padding: 0 26px 36px;
+        flex: 1;
+        padding: 8px 22px 20px;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
+      }
+      .${uid}-right-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .${uid}-info-box {
+        background: #f1ecfd;
+        border: 1px solid #e3d7ff;
+        border-radius: 10px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: #875fc8;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px;
+      }
+      .${uid}-info-box svg { flex-shrink: 0; margin-top: 1px; }
+      .${uid}-legal {
+        font-size: 14px;
+        line-height: 14px;
+        color: #617481;
+        font-weight: 400;
+        letter-spacing: 0.1px;
+        margin: 0;
+        opacity: 0.9;
+      }
+      .${uid}-trustpilot-bar {
+        background: #604291;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-shrink: 0;
+        -webkit-font-smoothing: antialiased;
       }
       .${uid}-stat-rows {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 10px;
       }
       .${uid}-stat-row {
         display: flex;
@@ -334,17 +337,18 @@
         letter-spacing: 0.2px; color: #617481;
       }
       .${uid}-stat-row .stat-value {
-        font-size: 18px; font-weight: 700; line-height: 24px;
+        font-size: 17px; font-weight: 700; line-height: 23px;
         letter-spacing: 0.2px; color: #101111;
       }
       .${uid}-instalment-box {
-        background: #f0f3fc;
+        background: #fff;
         border: 1px solid #e7ebfa;
         border-radius: 12px;
-        padding: 16px;
+        padding: 12px;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
+        box-shadow: 0px 6px 16px 0px rgba(0,0,0,0.03);
       }
       .${uid}-instalment-box .box-label {
         font-size: 16px; font-weight: 400; line-height: 22px;
@@ -357,10 +361,10 @@
 
       /* ── Mobile: stack panels ── */
       @media (max-width: 600px) {
-        .${uid}-modal { flex-direction: column; max-width: 400px; }
+        .${uid}-modal { flex-direction: column; max-width: 420px; }
         .${uid}-modal-left { width: 100%; min-width: unset; }
-        .${uid}-left-body { min-height: 240px; }
-        .${uid}-left-character { width: 180px; height: 180px; }
+        .${uid}-left-body { min-height: 200px; }
+        .${uid}-left-character { width: 200px; height: 200px; }
       }
     `;
 
@@ -387,10 +391,12 @@
     banner.setAttribute("tabindex", "0");
     banner.setAttribute("aria-haspopup", "dialog");
     banner.setAttribute("aria-label", "View interest free finance options");
+    const _initInst = Math.min(12, config.maxInstalments);
+    const _initMonthly = compute(config.price, _initInst).monthly;
     banner.innerHTML = `
       <div class="${uid}-banner-left">
         <div class="sub">Interest Free Finance from</div>
-        <div class="amt" id="${uid}-b-amt">calculating…</div>
+        <div class="amt" id="${uid}-b-amt">${fmt(_initMonthly)} per month</div>
         <div class="link">Find out more</div>
       </div>
       <div class="${uid}-badge">payitmonthly</div>
@@ -407,8 +413,8 @@
 
         <!-- Close button: top-right of whole modal -->
         <button class="${uid}-close" aria-label="Close">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 4L4 12M4 4l8 8" stroke="#e3e3e3" stroke-width="2" stroke-linecap="round"/>
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4L4 12M4 4l8 8" stroke="#617481" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
 
@@ -419,57 +425,64 @@
             <div class="${uid}-left-swirl-1"><img src="images/swirl-1.svg" alt="" /></div>
             <div class="${uid}-left-swirl-2"><img src="images/swirl-2.svg" alt="" /></div>
             <div class="${uid}-left-logo">
-              <img src="images/logo.svg" alt="payitmonthly" />
+              <img src="https://www.figma.com/api/mcp/asset/e8e58525-2928-4d18-8b90-df1e801bc8c0" alt="payitmonthly" />
             </div>
-            <div class="${uid}-left-text">
-              <p class="tagline">Spread the cost of your purchase</p>
-              <p class="heading">0% Interest</p>
-              <p class="subtext">Orders between £${Math.round(config.minPrice).toLocaleString("en-GB")} and £${Math.round(config.maxPrice).toLocaleString("en-GB")}</p>
+            <div class="${uid}-left-badges">
+              <div class="${uid}-left-badge">
+                <img class="${uid}-badge-icon" src="https://www.figma.com/api/mcp/asset/43063100-b929-416f-8f32-c9c17e4e4778" alt="" />
+                Interest-free
+              </div>
+              <div class="${uid}-left-badge">
+                <img class="${uid}-badge-icon" src="https://www.figma.com/api/mcp/asset/d50a3891-a16e-4783-8949-fe6c84df4760" alt="" />
+                Rapid decision
+              </div>
             </div>
             <img class="${uid}-left-plant" src="images/plant.png" alt="" />
             <!-- Character sits at bottom of purple panel, clipped by overflow:hidden -->
             <img class="${uid}-left-character" src="images/character.png" alt="" />
           </div>
-          <div class="${uid}-total-bar">
-            <span class="label">Total Cost of Item:</span>
-            <span class="amount" id="${uid}-m-total"></span>
+          <div class="${uid}-trustpilot-bar">
+            <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="22" height="22" rx="3" fill="#00B67A"/><path d="M11 3.5L12.84 9.11H18.76L13.96 12.55L15.8 18.16L11 14.72L6.2 18.16L8.04 12.55L3.24 9.11H9.16L11 3.5Z" fill="white"/></svg>
+            <span style="color:#fff;font-size:13px;font-weight:700;font-family:'Nunito Sans',sans-serif;">Trustpilot</span>
+            <div style="display:flex;gap:2px;">
+              ${[...Array(5)].map(() => `<svg width="17" height="17" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="2" fill="#00B67A"/><path d="M10 2.5L11.84 8.11H17.76L12.96 11.55L14.8 17.16L10 13.72L5.2 17.16L7.04 11.55L2.24 8.11H8.16L10 2.5Z" fill="white"/></svg>`).join('')}
+            </div>
           </div>
         </div>
 
         <!-- Right panel -->
         <div class="${uid}-modal-right">
           <div class="${uid}-right-sliders">
-            <h3>Possible Payment Plan</h3>
+            <h3>Payment Calculator</h3>
 
             <div class="${uid}-slider-block">
-              <label for="${uid}-dep-slider">Choose today's payment</label>
-              <input type="range" id="${uid}-dep-slider" min="0" max="100" step="1" value="50">
-            </div>
-
-            <div class="${uid}-slider-block">
-              <label for="${uid}-inst-slider">Choose instalments number</label>
+              <label for="${uid}-inst-slider">Number of monthly instalments</label>
               <input type="range" id="${uid}-inst-slider" min="2" max="${config.maxInstalments}" step="1" value="${Math.min(12, config.maxInstalments)}">
             </div>
           </div>
 
-          <div class="${uid}-divider"><img src="images/divider.svg" alt="" /></div>
-
           <div class="${uid}-right-stats">
             <div class="${uid}-stat-rows">
               <div class="${uid}-stat-row">
-                <span class="stat-label">Instalments</span>
+                <span class="stat-label">Total instalments</span>
                 <span class="stat-value" id="${uid}-m-inst"></span>
               </div>
               <div class="${uid}-stat-row">
-                <span class="stat-label">Today's payment</span>
-                <span class="stat-value" id="${uid}-m-dep"></span>
+                <span class="stat-label">Total repayable</span>
+                <span class="stat-value" id="${uid}-m-total"></span>
               </div>
             </div>
+            <div class="${uid}-right-cards">
             <div class="${uid}-instalment-box">
-              <span class="box-label">Instalment Amount</span>
+              <span class="box-label">Monthly payments</span>
               <span class="box-value" id="${uid}-m-monthly"></span>
             </div>
-          </div>
+            <div class="${uid}-info-box">
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="7.5" stroke="#875fc8" stroke-width="1.5"/><path d="M9 8.25V12.75M9 5.25V6.25" stroke="#875fc8" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>To select this plan go to Checkout, and select PayItMonthly in the Payment section.</span>
+            </div>
+            <p class="${uid}-legal">PayItMonthly is unregulated credit. 18+, UK only. Credit subject to status. Late or missed payments may impact your ability to get credit in future. T&amp;Cs apply see payitmonthly.uk/terms</p>
+            </div>
         </div>
 
       </div>
@@ -497,9 +510,6 @@
     });
 
     overlay
-      .querySelector(`#${uid}-dep-slider`)
-      .addEventListener("input", updateModal);
-    overlay
       .querySelector(`#${uid}-inst-slider`)
       .addEventListener("input", updateModal);
 
@@ -515,13 +525,8 @@
     const el = document.getElementById(`${uid}-b-amt`);
     if (!el) return;
     const instSlider = document.getElementById(`${uid}-inst-slider`);
-    const depSlider = document.getElementById(`${uid}-dep-slider`);
-    if (!instSlider || !depSlider) return;
-    const { monthly } = compute(
-      config.price,
-      parseFloat(depSlider.value),
-      parseInt(instSlider.value),
-    );
+    if (!instSlider) return;
+    const { monthly } = compute(config.price, parseInt(instSlider.value));
     el.textContent = fmt(monthly) + " per month";
   }
 
@@ -537,24 +542,16 @@
   /* ── Update modal stats ── */
   function updateModal() {
     const instSlider = document.getElementById(`${uid}-inst-slider`);
-    const depSlider = document.getElementById(`${uid}-dep-slider`);
-    if (!instSlider || !depSlider) return;
+    if (!instSlider) return;
 
     const instalments = parseInt(instSlider.value);
-    const depPct = parseFloat(depSlider.value);
-    const { deposit, monthly, remInstalments } = compute(
-      config.price,
-      depPct,
-      instalments,
-    );
+    const { monthly } = compute(config.price, instalments);
 
     document.getElementById(`${uid}-m-total`).textContent = fmt(config.price);
     document.getElementById(`${uid}-m-inst`).textContent = instalments;
-    document.getElementById(`${uid}-m-dep`).textContent = fmt(deposit);
     document.getElementById(`${uid}-m-monthly`).textContent =
-      fmt(monthly) + " × " + remInstalments;
+      instalments + " × " + fmt(monthly);
 
-    updateSliderFill(depSlider);
     updateSliderFill(instSlider);
     updateBanner();
   }
