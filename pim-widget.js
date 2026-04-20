@@ -124,21 +124,16 @@
       .${uid}-banner-left .sub  { font-size: 14px; font-weight: 400; color: #506978; line-height: 20px; }
       .${uid}-banner-left .amt  { font-size: 16px; font-weight: 700; color: #101111; line-height: 22px; }
       .${uid}-banner-left .link { font-size: 12px; font-weight: 700; color: #875fc8; text-decoration: underline; line-height: normal; }
-      .${uid}-badge {
-        background: #875fc8;
-        border-radius: 10px;
-        padding: 22px 20px;
-        align-self: stretch;
+      .${uid}-logo-badge {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        overflow: hidden;
       }
-      .${uid}-badge img {
+      .${uid}-logo-badge img {
         display: block;
-        width: 140px;
-        height: 26px;
+        width: 180px;
+        height: 70px;
         object-fit: contain;
       }
 
@@ -455,8 +450,8 @@
           <div class="link">Find out more</div>
         </div>
       </div>
-      <div class="${uid}-badge">
-        <img src="https://www.figma.com/api/mcp/asset/1eb3c549-ded3-4b70-9a36-53c255f9bc81" alt="payitmonthly" />
+      <div class="${uid}-logo-badge">
+        <img src="images/Logo (1).png" alt="payitmonthly" />
       </div>
     `;
 
