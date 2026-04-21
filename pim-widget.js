@@ -161,6 +161,7 @@
         font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         box-shadow: 0 4px 60px rgba(0,0,0,.13);
         position: relative;
+        background: ${color};
       }
 
       /* ── Close button ── */
@@ -191,6 +192,7 @@
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+  background: ${color} !important;
 }
       .${uid}-left-body {
         background: ${color};
