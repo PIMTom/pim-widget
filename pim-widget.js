@@ -152,7 +152,6 @@
 
       /* ── Modal shell (two-panel) ── */
       .${uid}-modal {
-        background: #fff;
         border-radius: 20px;
         overflow: hidden;
         width: 100%;
@@ -231,7 +230,7 @@
       .${uid}-left-badges {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
         position: relative;
         z-index: 1;
       }
@@ -250,7 +249,7 @@
         height: 38px;
         flex-shrink: 0;
         display: block;
-        margin: -3px;
+        margin-left: -4px;
       }
       .${uid}-badge-icon svg { display: block; }
       .${uid}-left-plant {
@@ -485,15 +484,15 @@
             <div class="${uid}-left-swirl-1"><img src="images/swirl-1.svg" alt="" /></div>
             <div class="${uid}-left-swirl-2"><img src="images/swirl-2.svg" alt="" /></div>
             <div class="${uid}-left-logo">
-              <img src="https://www.figma.com/api/mcp/asset/e8e58525-2928-4d18-8b90-df1e801bc8c0" alt="payitmonthly" />
+              <img src="images/logo.svg" alt="payitmonthly" />
             </div>
             <div class="${uid}-left-badges">
               <div class="${uid}-left-badge">
-                <img class="${uid}-badge-icon" src="https://www.figma.com/api/mcp/asset/43063100-b929-416f-8f32-c9c17e4e4778" alt="" />
+                <img class="${uid}-badge-icon" src="images/interest.png" alt="" />
                 Interest-free
               </div>
               <div class="${uid}-left-badge">
-                <img class="${uid}-badge-icon" src="https://www.figma.com/api/mcp/asset/d50a3891-a16e-4783-8949-fe6c84df4760" alt="" />
+                <img class="${uid}-badge-icon" src="images/rapid_decision_bolt.png" alt="" />
                 Rapid decision
               </div>
             </div>
